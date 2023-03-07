@@ -79,6 +79,9 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             incomingPhoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             Log.i("incoming", ""+incomingPhoneNumber);
             Toast.makeText(context, ""+incomingPhoneNumber, Toast.LENGTH_LONG).show();
+            Intent intent1= new Intent(context,ChatHead.class);
+            intent1.putExtra("PhoneNumber",outgoingPhoneNumber);
+            context.startService(intent1);
         }
         if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL"))
         {
@@ -95,9 +98,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             Log.i("TEST","Outgoing " + outgoingPhoneNumber);
             Log.i("TEST","Incoming" + incomingPhoneNumber);
             Toast.makeText(context, "Call Start...!", Toast.LENGTH_SHORT).show();
-            Intent intent1= new Intent(context,ChatHead.class);
-            intent1.putExtra("PhoneNumber",outgoingPhoneNumber);
-            context.startService(intent1);
+
 
         }
     }

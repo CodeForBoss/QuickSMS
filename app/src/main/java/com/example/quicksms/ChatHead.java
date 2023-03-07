@@ -1,5 +1,6 @@
 package com.example.quicksms;
 
+import android.accessibilityservice.AccessibilityService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,25 +12,31 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-public class ChatHead extends Service {
+public class ChatHead extends AccessibilityService {
 
     private WindowManager windowManager;
     private ImageView chatHead;
     WindowManager windowManager2;
     String phoneNumber;
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        return null;
     }
+
+    @Override
+    public void onInterrupt() {
+
+    }
+
+
 
     @Override
     public void onCreate() {
@@ -52,7 +59,16 @@ public class ChatHead extends Service {
         View view = layoutInflater.inflate(R.layout.activity_chathead, null);
 
         Button btn1 = view.findViewById(R.id.btnStartService);
+        Button btn2 = view.findViewById(R.id.btnStopService);
         btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("newtag", "Click Chat");
+
+                windowManager2.removeViewImmediate(view);
+            }
+        });
+        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("newtag", "Click Chat");
@@ -80,6 +96,12 @@ public class ChatHead extends Service {
                 LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
+        WindowManager.LayoutParams appOverlayLayoutParams = new WindowManager.LayoutParams();
+        appOverlayLayoutParams.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
+        appOverlayLayoutParams.format = PixelFormat.TRANSLUCENT;
+        appOverlayLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        appOverlayLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        appOverlayLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
 //        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
 //                WindowManager.LayoutParams.MATCH_PARENT,
@@ -92,7 +114,9 @@ public class ChatHead extends Service {
         params.gravity = Gravity.TOP | Gravity.CENTER;
         params.x = 0;
         params.y = 0;
+
         windowManager2.addView(view, params);
+        view.bringToFront();
 
         return super.onStartCommand(intent, flags, startId);
 
