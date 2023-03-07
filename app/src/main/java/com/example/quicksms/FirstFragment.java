@@ -1,5 +1,6 @@
 package com.example.quicksms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,9 @@ public class FirstFragment extends Fragment {
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent1= new Intent(getContext(),ChatHead.class);
+                intent1.putExtra("PhoneNumber","outgoingPhoneNumber");
+                getContext().startService(intent1);
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }

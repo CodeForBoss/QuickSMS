@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.quicksms.ChatHead" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btnStartService"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="startService"
+            android:text="start_service" />
+
+        <Button
+            android:id="@+id/btnStopService"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="stopService"
+            android:text="stop_service" />
+
+        <TextView
+            android:id="@+id/incomingNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+    </LinearLayout>
+</RelativeLayout>

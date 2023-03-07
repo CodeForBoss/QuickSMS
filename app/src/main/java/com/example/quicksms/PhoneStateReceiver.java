@@ -85,11 +85,19 @@ public class PhoneStateReceiver extends BroadcastReceiver {
              outgoingPhoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
             Log.i("outgoing", ""+outgoingPhoneNumber);
             // Toast.makeText(context, ""+outgoingPhoneNumber, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Call Start...!", Toast.LENGTH_SHORT).show();
+            Intent intent1= new Intent(context,ChatHead.class);
+            intent1.putExtra("PhoneNumber",outgoingPhoneNumber);
+            context.startService(intent1);
         }
         if(TelephonyManager.EXTRA_STATE_IDLE.equals(state))
         {
             Log.i("TEST","Outgoing " + outgoingPhoneNumber);
             Log.i("TEST","Incoming" + incomingPhoneNumber);
+            Toast.makeText(context, "Call Start...!", Toast.LENGTH_SHORT).show();
+            Intent intent1= new Intent(context,ChatHead.class);
+            intent1.putExtra("PhoneNumber",outgoingPhoneNumber);
+            context.startService(intent1);
 
         }
     }
