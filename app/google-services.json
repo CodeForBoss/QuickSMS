@@ -7,41 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:877043587404:android:e8f09459f19f8d337b97e9",
-        "android_client_info": {
-          "package_name": "com.example.great_sms"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "877043587404-qpbmk7rlbfhotvqakipsk02na01icisd.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDCNSSAOBw8hAbXL33Dn9vBrbcHfVA2aro"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "877043587404-qpbmk7rlbfhotvqakipsk02na01icisd.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:877043587404:android:ec474d55eae73d7d7b97e9",
         "android_client_info": {
           "package_name": "com.example.quicksms"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "877043587404-8bdfhkhvn9gdvkmb2f6vq40k97h0tq33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quicksms",
+            "certificate_hash": "3014b3e1f836dc6fb447bd352863cef6c239a604"
+          }
+        },
         {
           "client_id": "877043587404-qpbmk7rlbfhotvqakipsk02na01icisd.apps.googleusercontent.com",
           "client_type": 3
