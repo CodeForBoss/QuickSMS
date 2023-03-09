@@ -18,14 +18,15 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="33dp"
-        android:text="Provide Credientials"
+        android:text="@string/provide_credientials"
         android:textColor="@color/design_default_color_primary"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:id="@+id/email_input_layout"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
         android:background="@drawable/round_corner_toggle"
@@ -48,10 +49,75 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawablePadding="7dp"
+            android:textColor="#757575"
+      />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/phone_input_layout"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/round_corner_toggle"
+        android:hint="@string/_123854278"
+        android:textColorHint="#090909"
+        app:boxBackgroundColor="#FFFFFF"
+
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:helperTextTextColor="#000000"
+        app:placeholderTextColor="#000000"
+        app:prefixTextColor="#000000"
+        app:startIconDrawable="@drawable/call"
+        app:startIconTint="#000000"
+        tools:visibility="gone"
+        app:boxBackgroundMode="filled"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phone_input_field"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="7dp"
             android:textColor="#000000" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/verification_input_layout"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/round_corner_toggle"
+        android:hint="@string/verification_code"
+        android:textColorHint="#090909"
+        app:boxBackgroundColor="#FFFFFF"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:helperTextTextColor="#000000"
+        app:placeholderTextColor="#000000"
+        app:prefixTextColor="#000000"
+        app:startIconDrawable="@drawable/verified"
+        app:startIconTint="#000000"
+        tools:visibility="gone"
+        app:boxBackgroundMode="filled"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/verification_input_field"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:drawablePadding="7dp"
+            android:textColor="#000000" />
+
+    </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -85,7 +151,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:id="@+id/repeat_password_input_field_layout"
         android:hint="@string/password_label"
@@ -115,13 +181,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
+    <TextView
+        android:id="@+id/text_email_phone_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/use_phone_instead"
+        android:textColor="@color/design_default_color_primary_variant"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/continue_button"
         style="?attr/materialButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:text="Continue" />
+        android:text="@string/continue_str" />
 
 
     <View
@@ -136,7 +212,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="7dp"
-        android:text="Or"
+        android:text="@string/or"
         android:textColor="@color/design_default_color_primary" />
 
     <com.google.android.gms.common.SignInButton
