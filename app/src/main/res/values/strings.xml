@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">QuickSMS</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
     <string name="action_settings">Settings</string>
     <string name="textfield_label">email</string>
     <string name="password_label">password</string>
@@ -8,6 +10,7 @@
     <string name="continue_str">Continue</string>
     <string name="or">Or</string>
     <string name="use_phone_instead">Use phone instead</string>
+    <string name="use_email_instead">Use email instead</string>
     <string name="_123854278">Phone number</string>
     <string name="verification_code">Verification code</string>
 </resources>

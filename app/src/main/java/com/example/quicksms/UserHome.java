@@ -18,6 +18,7 @@ public class UserHome extends AppCompatActivity {
             verification_input_layout;
     TextInputEditText emailField,passwordField,repeatPasswordField,phoneInputFiled, verificationCodeFiled;
     Button btnSave ;
+    ProjectUtils projectUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,8 @@ public class UserHome extends AppCompatActivity {
             }
         });
 
-
+        projectUtils = new ProjectUtils(this);
+        projectUtils.checkAllPermission();
 
     }
 }
