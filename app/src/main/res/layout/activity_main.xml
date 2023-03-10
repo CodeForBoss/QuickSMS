@@ -55,16 +55,18 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/phone_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
         android:background="@drawable/round_corner_toggle"
         android:hint="@string/_123854278"
         android:textColorHint="#090909"
-        app:boxBackgroundColor="#FFFFFF"
+        android:visibility="gone"
 
+        app:boxBackgroundColor="#FFFFFF"
+        app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
@@ -74,9 +76,7 @@
         app:prefixTextColor="#000000"
         app:startIconDrawable="@drawable/call"
         app:startIconTint="#000000"
-        tools:visibility="gone"
-        app:boxBackgroundMode="filled"
-        >
+        tools:visibility="gone">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phone_input_field"
@@ -88,15 +88,17 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/verification_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
         android:background="@drawable/round_corner_toggle"
         android:hint="@string/verification_code"
         android:textColorHint="#090909"
+        android:visibility="gone"
         app:boxBackgroundColor="#FFFFFF"
+        app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusTopEnd="8dp"
@@ -106,9 +108,7 @@
         app:prefixTextColor="#000000"
         app:startIconDrawable="@drawable/verified"
         app:startIconTint="#000000"
-        tools:visibility="gone"
-        app:boxBackgroundMode="filled"
-        >
+        tools:visibility="gone">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/verification_input_field"

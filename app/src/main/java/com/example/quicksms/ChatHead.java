@@ -4,9 +4,11 @@ import android.accessibilityservice.AccessibilityService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,7 +48,13 @@ public class ChatHead extends AccessibilityService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getPackageName(), 0);
+        String userPhoneKay="phone";
+        String userEmailKay="email";
+        SharedPreferences.Editor editor = pref.edit();
 
+        String phone=pref.getString(userPhoneKay,"");
+        String email=pref.getString(userEmailKay,"");
 
         phoneNumber = intent.getStringExtra("PhoneNumber");
         Log.d("newtag", "StartService" + phoneNumber);
@@ -58,14 +66,29 @@ public class ChatHead extends AccessibilityService {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.activity_chathead, null);
 
-        Button btn1 = view.findViewById(R.id.btnStartService);
+        //Button btn1 = view.findViewById(R.id.btnStartService);
+        Button btnSendPhoneNumber =view.findViewById(R.id.btn_sendPhone);
+        Button btnSendPhoneEmail =view.findViewById(R.id.btn_sendEmail);
+        Button btnSendPhoneAddress =view.findViewById(R.id.btn_sendAddress);
         Button btn2 = view.findViewById(R.id.btnStopService);
-        btn1.setOnClickListener(new View.OnClickListener() {
+
+
+        btnSendPhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("newtag", "Click Chat");
+                Log.d("=====> phone", phoneNumber);
+                    SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNumber, null, phone, null, null);
+            }
+        });
 
-                windowManager2.removeViewImmediate(view);
+        btnSendPhoneEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("newtag", "Click Chat");
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNumber, null, email, null, null);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -78,8 +101,8 @@ public class ChatHead extends AccessibilityService {
         });
 
 
-        TextView number_txt = view.findViewById(R.id.incomingNumber);
-        number_txt.setText(phoneNumber);
+     //   TextView number_txt = view.findViewById(R.id.incomingNumber);
+     //   number_txt.setText(phoneNumber);
 
 
 

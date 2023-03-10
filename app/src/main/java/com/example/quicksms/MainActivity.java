@@ -3,24 +3,25 @@ package com.example.quicksms;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
-import android.app.Activity;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import android.provider.Settings;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -47,13 +48,13 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.util.concurrent.TimeUnit;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
     // code to post/handler request for permission
     public final static int REQUEST_CODE = -1010101;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 
     TextInputEditText emailField,passwordField,repeatPasswordField,phoneInputFiled, verificationCodeFiled;
     TextView text_email_phone_option;
@@ -115,13 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 if(selectedOption==SL_OPTION_PHONE){
                     text_email_phone_option.setText("Use phone instead");
                     email_input_layout.setVisibility(View.VISIBLE);
-                    password_input_field_layout.setVisibility(View.GONE);
+                    phone_input_layout.setVisibility(View.GONE);
                     selectedOption =SL_OPTION_EMAIL;
                 } else{
                     selectedOption =SL_OPTION_PHONE;
                     text_email_phone_option.setText("Use email instead");
                     email_input_layout.setVisibility(View.GONE);
-                    password_input_field_layout.setVisibility(View.VISIBLE);
+                    phone_input_layout.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -168,11 +169,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (android.os.Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(this)) {   //Android M Or Over
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, REQUEST_CODE);
-            return;
-        }
+
 
         googleSigninBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,11 +235,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onCodeSent:" + verificationId);
                 password_input_field_layout.setEnabled(false);
                 verification_input_layout.setVisibility(View.VISIBLE);
+                onCodeSent=true;
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
             }
         };
+        checkAllPermission();
+      //  checkAllPermission();
         // [END phone_auth_callbacks]
     }
 
@@ -253,8 +253,17 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            reload();
+            updateUI(currentUser);
         }
+        //checkAllPermission();
+    }
+
+    @Override
+    public void onResume() {
+     //
+        super.onResume();
+
+
     }
 
     private void reload() {
@@ -494,6 +503,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
 
                             FirebaseUser user = task.getResult().getUser();
+                            updateUI(user);
                             // Update UI
                         } else {
                             // Sign in failed, display a message and update the UI
@@ -523,7 +533,117 @@ public class MainActivity extends AppCompatActivity {
     private void verifyPhoneNumberWithCode(String verificationId, String code) {
         // [START verify_with_code]
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        signInWithPhoneAuthCredential(credential);
         // [END verify_with_code]
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    SmsManager smsManager = SmsManager.getDefault();
+//                    smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                    Toast.makeText(getApplicationContext(), "SMS sent.",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+        //checkAllPermission();
+    }
+
+
+    public void checkAllPermission(){
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {
+                android.Manifest.permission.SEND_SMS,
+                android.Manifest.permission.READ_PHONE_STATE,
+                android.Manifest.permission.READ_CALL_LOG,
+                android.Manifest.permission.WRITE_SETTINGS,
+                android.Manifest.permission.WRITE_SECURE_SETTINGS
+        };
+
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+        if (!Settings.canDrawOverlays(this)) {   //Android M Or Over
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+        if(!Settings.System.canWrite(this)){
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
+            startActivity(intent);
+        }
+
+        if(!Settings.System.canWrite(this)){
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
+            startActivity(intent);
+        }
+
+
+        checkAccessibilityPermission();
+
+
+
+//        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+//        intent.setData(Uri.parse("package:com.example.quicksms"));
+//        startActivity(intent);
+
+//        try{
+//            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+//            startActivity(intent);
+////            Intent intent1 = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+////            intent1.setData(Uri.parse("package:com.example.quicksms"));
+////            startActivity(intent1);
+////            Settings.Secure.putString(getContentResolver(),
+////                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES, "com.example.quicksms/ChatHead");
+////            Settings.Secure.putString(getContentResolver(),
+////                    Settings.Secure.ACCESSIBILITY_ENABLED, "1");
+//        }catch (Exception e){
+//            System.out.println(e);
+//        }
+
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // method to check is the user has permitted the accessibility permission
+    // if not then prompt user to the system's Settings activity
+    public boolean checkAccessibilityPermission () {
+        int accessEnabled = 0;
+        try {
+            accessEnabled = Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (accessEnabled == 0) {
+            // if not construct intent to request permission
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // request permission via start activity for result
+            startActivity(intent);
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

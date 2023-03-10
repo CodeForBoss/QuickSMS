@@ -4,10 +4,10 @@
     <string name="textfield_label">email</string>
     <string name="password_label">password</string>
     <string name="default_web_client_id_s" translatable="false">877043587404-8bdfhkhvn9gdvkmb2f6vq40k97h0tq33.apps.googleusercontent.com</string>
-    <string name="provide_credientials">Provide Credientials</string>
+    <string name="provide_credientials">Provide Credentials</string>
     <string name="continue_str">Continue</string>
     <string name="or">Or</string>
     <string name="use_phone_instead">Use phone instead</string>
-    <string name="_123854278">+123854278</string>
+    <string name="_123854278">Phone number</string>
     <string name="verification_code">Verification code</string>
 </resources>
