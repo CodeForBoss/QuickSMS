@@ -62,16 +62,6 @@ public class UserHome extends AppCompatActivity {
         });
         emailField.setText(email);
         phoneInputFiled.setText(phone);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                emailField.setText(emailField.getText());
-                editor.putString(userPhoneKay, String.valueOf(emailField.getText()));
-                editor.putString(userEmailKay, String.valueOf(phoneInputFiled.getText()));
-                phoneInputFiled.setText(phoneInputFiled.getText());
-                editor.apply();
-            }
-        });
 
         projectUtils = new ProjectUtils(this);
         projectUtils.checkAllPermission();
@@ -82,13 +72,23 @@ public class UserHome extends AppCompatActivity {
         System.out.println(user.getDisplayName());
         mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference mDatabaseUser = FirebaseDatabase.getInstance().getReference("users").child(user.getUid().toString());
-        mDatabaseUser.child("email").setValue("mdjubayer247@gmail.com");
+
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                String email = String.valueOf(dataSnapshot.child("email").getValue(String.class));
-                System.out.println("======firebase read "+email);
+
+                try {
+                    // Get Post object and use the values to update the UI
+                    String email = String.valueOf(dataSnapshot.child("email").getValue(String.class));
+                    String phone = String.valueOf(dataSnapshot.child("phone").getValue(String.class));
+                    System.out.println("======firebase read "+email);
+                    emailField.setText(email);
+                    phoneInputFiled.setText(phone);
+                }
+                catch (Exception e){
+                    System.out.println("======firebase read  no value stored");
+                }
+
             }
 
             @Override
@@ -98,6 +98,20 @@ public class UserHome extends AppCompatActivity {
             }
         };
         mDatabaseUser.addValueEventListener(postListener);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emailField.setText(emailField.getText());
+                editor.putString(userPhoneKay, String.valueOf(emailField.getText()));
+                editor.putString(userEmailKay, String.valueOf(phoneInputFiled.getText()));
+                phoneInputFiled.setText(phoneInputFiled.getText());
+                editor.apply();
+                mDatabaseUser.child("email").setValue(String.valueOf(emailField.getText()));
+                mDatabaseUser.child("phone").setValue(String.valueOf(phoneInputFiled.getText()));
+
+            }
+        });
 
 
     }
