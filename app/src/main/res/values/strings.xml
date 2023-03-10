@@ -13,4 +13,13 @@
     <string name="use_email_instead">Use email instead</string>
     <string name="_123854278">Phone number</string>
     <string name="verification_code">Verification code</string>
+    <string name="personal">Personal</string>
+    <string name="business">Business</string>
+    <string name="street_address">Street Address</string>
+    <string name="address_line_2_optional">Address line 2 (optional)</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zip">Zip</string>
+    <string name="country">Country</string>
+    <string name="update">Update</string>
 </resources>
