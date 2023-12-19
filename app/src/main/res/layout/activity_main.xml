@@ -12,6 +12,14 @@
     app:layoutDescription="@xml/activity_main_scene"
     tools:context=".MainActivity">
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressbar"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"

@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E5F4F6"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="30dp"
     app:layoutDescription="@xml/activity_main_scene"
     tools:context=".UserHome">
 
@@ -28,10 +27,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingTop="5dp"
+        android:weightSum="2"
         android:paddingBottom="5dp">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/ptext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -39,20 +39,36 @@
             android:gravity="center"
             android:paddingVertical="4dp"
             android:text="@string/personal"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginEnd="0.5dp"
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/btext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#3F51B5"
             android:gravity="center"
             android:paddingVertical="4dp"
+            android:textSize="15sp"
             android:text="@string/business"
+            android:layout_marginStart="0.5dp"
             android:textColor="@color/white" />
     </LinearLayout>
 
+<LinearLayout
+    android:id="@+id/personal_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:boxCornerRadiusBottomEnd="8dp"
+    app:boxCornerRadiusBottomStart="8dp"
+    app:boxCornerRadiusTopEnd="8dp"
+    app:boxCornerRadiusTopStart="8dp"
+    android:visibility="visible"
+    android:gravity="center">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/full_name_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -64,10 +80,6 @@
         android:textColorHint="#090909"
         app:boxBackgroundColor="#FFFFFF"
         app:boxBackgroundMode="filled"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp"
         app:helperTextTextColor="#000000"
         app:placeholderTextColor="#000000"
         app:prefixTextColor="#000000"
@@ -81,8 +93,8 @@
             android:drawablePadding="7dp"
             android:textColor="#757575" />
 
-    </com.google.android.material.textfield.TextInputLayout>
 
+    </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -209,7 +221,8 @@
     <LinearLayout
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/city_field_layout"
@@ -218,9 +231,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="7dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:background="@drawable/round_corner_toggle"
-
             android:hint="@string/city"
             android:textColorHint="#090909"
             android:visibility="visible"
@@ -249,11 +261,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:background="@drawable/round_corner_toggle"
             android:hint="@string/state"
             android:textColorHint="#090909"
-
             android:visibility="visible"
             app:boxBackgroundColor="#FFFFFF"
             app:boxBackgroundMode="filled"
@@ -281,7 +292,8 @@
     <LinearLayout
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/country_field_layout"
@@ -290,7 +302,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="7dp"
-            android:layout_weight="6"
+            android:layout_weight="1"
             android:background="@drawable/round_corner_toggle"
             android:hint="@string/country"
             android:textColorHint="#090909"
@@ -307,7 +319,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/country_field"
-                android:layout_width="320dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="7dp"
                 android:textColor="#000000" />
@@ -320,7 +332,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7dp"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:background="@drawable/round_corner_toggle"
             android:hint="@string/zip"
             android:textColorHint="#090909"
@@ -337,7 +349,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/zip_field"
-                android:layout_width="320dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="7dp"
                 android:textColor="#000000"
@@ -346,6 +358,276 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
+    </LinearLayout>
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/bn_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        android:visibility="gone"
+        android:gravity="center">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bn_name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/round_corner_toggle"
+            android:hint="Business name"
+            android:textColorHint="#090909"
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="filled"
+            app:helperTextTextColor="#000000"
+            app:placeholderTextColor="#000000"
+            app:prefixTextColor="#000000"
+            app:startIconDrawable="@drawable/person"
+            app:startIconTint="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bn_name_input_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="7dp"
+                android:textColor="#757575" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bn_email_input_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/round_corner_toggle"
+            android:hint="Business Email"
+            android:textColorHint="#090909"
+            android:visibility="visible"
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="filled"
+            app:helperTextTextColor="#000000"
+            app:placeholderTextColor="#000000"
+            app:prefixTextColor="#000000"
+            app:startIconDrawable="@drawable/mail_fill0_wght400_grad0_opsz48"
+            app:startIconTint="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bn_email_input_field"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:drawablePadding="7dp"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bn_phone_input_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/round_corner_toggle"
+            android:hint="Business Phone Number"
+            android:textColorHint="#090909"
+            android:visibility="visible"
+
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="filled"
+            app:helperTextTextColor="#000000"
+            app:placeholderTextColor="#000000"
+            app:prefixTextColor="#000000"
+            app:startIconDrawable="@drawable/call"
+            app:startIconTint="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bn_phone_input_field"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:drawablePadding="7dp"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bn_address1_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/round_corner_toggle"
+            android:hint="Address"
+            android:textColorHint="#090909"
+            android:visibility="visible"
+
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="filled"
+            app:helperTextTextColor="#000000"
+            app:placeholderTextColor="#000000"
+            app:prefixTextColor="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bn_address1_field"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:drawablePadding="7dp"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bn_address2_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/round_corner_toggle"
+            android:hint="@string/address_line_2_optional"
+            android:textColorHint="#090909"
+            android:visibility="visible"
+
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="filled"
+            app:helperTextTextColor="#000000"
+            app:placeholderTextColor="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bn_address2_field"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:drawablePadding="7dp"
+                android:textColor="#000000" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bn_city_field_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_corner_toggle"
+                android:hint="@string/city"
+                android:textColorHint="#090909"
+                android:visibility="visible"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxBackgroundMode="filled"
+                app:helperTextTextColor="#000000"
+                app:placeholderTextColor="#000000"
+                app:prefixTextColor="#000000">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/bn_city_filed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:textColor="#000000" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bn_state_field_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_corner_toggle"
+                android:hint="@string/state"
+                android:textColorHint="#090909"
+                android:visibility="visible"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxBackgroundMode="filled"
+                app:helperTextTextColor="#000000"
+                app:placeholderTextColor="#000000"
+                app:prefixTextColor="#000000">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/bn_state_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:textColor="#000000" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bn_country_field_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_corner_toggle"
+                android:hint="@string/country"
+                android:textColorHint="#090909"
+                android:visibility="visible"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxBackgroundMode="filled"
+                app:helperTextTextColor="#000000"
+                app:placeholderTextColor="#000000"
+                app:prefixTextColor="#000000">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/bn_country_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:textColor="#000000" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bn_zip_field_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_corner_toggle"
+                android:hint="@string/zip"
+                android:textColorHint="#090909"
+                android:visibility="visible"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxBackgroundMode="filled"
+                app:helperTextTextColor="#000000"
+                app:placeholderTextColor="#000000"
+                app:prefixTextColor="#000000">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/bn_zip_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:textColor="#000000"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
     </LinearLayout>
 
     <Button
@@ -362,6 +644,7 @@
         android:layout_height="48dp"
         android:layout_gravity="bottom|center|right"
         android:backgroundTint="#E5F4F6"
+        android:layout_marginEnd="30dp"
         app:srcCompat="@drawable/logout" />
 
 

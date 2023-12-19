@@ -1,5 +1,8 @@
 package com.example.quicksms;
 
+import static android.content.Context.WINDOW_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +10,9 @@ import android.content.SharedPreferences;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
@@ -41,12 +47,13 @@ import android.widget.Toast;
 //}
 public class PhoneStateReceiver extends BroadcastReceiver {
     private String quickSMSWindow ="quickSMSWindow";
+    WindowManager windowManager2;
     @Override
     public void onReceive(final Context context, Intent intent) {
 //        SharedPreferences prefs = getSharedPreferences("MY_PREFS_NAME", MODE_PRIVATE);
        // SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_APPEND);
         SharedPreferences pref = context.getApplicationContext().getSharedPreferences("MyPref", 0);
-
+        windowManager2 = (WindowManager) context.getSystemService(WINDOW_SERVICE);
         SharedPreferences.Editor editor = pref.edit();
         boolean isWindowOpened = pref.getBoolean(quickSMSWindow, false);
         Intent intent1= new Intent(context,ChatHead.class);
@@ -88,7 +95,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 //            incomingPhoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 //            Log.i("incoming", ""+incomingPhoneNumber);
 //            Toast.makeText(context, ""+incomingPhoneNumber, Toast.LENGTH_LONG).show();
-//            intent1.putExtra("PhoneNumber",outgoingPhoneNumber);
+//            intent1.putExtra("",outgoingPhoneNumber);
 //        }
         if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
             incomingPhoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
@@ -99,14 +106,21 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
             if(incomingPhoneNumber!=""){
                 intent1.putExtra("PhoneNumber",incomingPhoneNumber);
+                intent1.putExtra("isVisible","true");
                 context.startService(intent1);
                 Log.d("phoneCallReceiver", "phone picked up");
             }
             else if(outgoingPhoneNumber!=""){
                 intent1.putExtra("PhoneNumber",outgoingPhoneNumber);
+                intent1.putExtra("isVisible","true");
                 context.startService(intent1);
             }
 
+        } else  if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
+            Log.d("anisur", "onReceive: idle called");
+            intent1.putExtra("isVisible","false");
+            intent1.putExtra("PhoneNumber","");
+            context.startService(intent1);
         }
 //        if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL"))
 //        {

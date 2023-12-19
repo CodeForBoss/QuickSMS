@@ -5,18 +5,21 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +32,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -76,19 +81,27 @@ public class MainActivity extends AppCompatActivity {
     private int selectedOption = SL_OPTION_EMAIL;
     private boolean onCodeSent = false;
     private String mVerificationId;
+
+    private ProgressBar progressBar;
+
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
             Log.d(TAG, "onVerificationCompleted:" + credential);
             signInWithPhoneAuthCredential(credential);
+            progressBar.setVisibility(View.GONE);
         }
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
+            progressBar.setVisibility(View.GONE);
             Log.w(TAG, "onVerificationFailed", e);
             if (e instanceof FirebaseAuthInvalidCredentialsException) {
                 // Invalid request
+                Toast.makeText(getApplicationContext(),"Invalid",Toast.LENGTH_SHORT).show();
             } else if (e instanceof FirebaseTooManyRequestsException) {
                 // The SMS quota for the project has been exceeded
+            } else {
+                //Toast.makeText(this,"Invalid Verification Code",Toast.LENGTH_SHORT).show();
             }
             // Show a message and update the UI
         }
@@ -101,8 +114,15 @@ public class MainActivity extends AppCompatActivity {
             verification_input_layout.setVisibility(View.VISIBLE);
             onCodeSent = true;
             mVerificationId = verificationId;
+            progressBar.setVisibility(View.GONE);
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id_s))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(MainActivity.this, gso);
@@ -130,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         phoneInputFiled = findViewById(R.id.phone_input_field);
         verification_input_layout = findViewById(R.id.verification_input_layout);
         verificationCodeFiled = findViewById(R.id.verification_input_field);
+        progressBar = findViewById(R.id.progressbar);
         text_email_phone_option.setOnClickListener(v -> {
             if (selectedOption == SL_OPTION_PHONE) {
                 text_email_phone_option.setText(R.string.use_phone_instead);
@@ -145,11 +166,16 @@ public class MainActivity extends AppCompatActivity {
         });
         continueButton.setOnClickListener(v -> {
             if (selectedOption == SL_OPTION_PHONE && onCodeSent) {
+                progressBar.setVisibility(View.VISIBLE);
                 String verificationCode = String.valueOf(verificationCodeFiled.getText());
                 verifyPhoneNumberWithCode(mVerificationId, verificationCode);
             } else if (selectedOption == SL_OPTION_PHONE) {
-                String phone_number = String.valueOf(phoneInputFiled.getText());
-                startPhoneNumberVerification(phone_number);
+                progressBar.setVisibility(View.VISIBLE);
+                String convertText = String.valueOf(phoneInputFiled.getText());
+                if (!convertText.startsWith("+")) {
+                   convertText = "+"+phoneInputFiled.getText();
+                }
+                startPhoneNumberVerification(convertText);
             } else if (!userSigningUp && !userSigningIn) {
                 checkUser();
                 Toast.makeText(getApplicationContext(), "===>checking user", Toast.LENGTH_LONG).show();
@@ -175,8 +201,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         googleSigninBtn.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             someActivityResultLauncher.launch(signInIntent);
+            Log.d(TAG, "onActivityResult: called intent");
         });
 
 
@@ -186,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        updateUI();
+        //updateUI();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateUI();
+        //updateUI();
     }
 
     private void createUserWithEmail(String email, String password) {
@@ -207,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(MainActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
-                        updateUI();
+                        //updateUI();
                     }
                 });
     }
@@ -217,16 +245,11 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("=====> " + "updateUI");
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
-//                String signinProvider = user.getProviderId();
-//                System.out.println(mAuth.getCurrentUser().getMultiFactor());
-//                List<? extends UserInfo> signinProviderID = user.getProviderData();
-//                for(Object d : signinProviderID){
-//                    System.out.println("=====> " + d);
-//                }
-//                System.out.println("=====> " + signinProvider);
                 if (user.isEmailVerified()) {
                     Intent userHome = new Intent(MainActivity.this, UserHome.class);
+                    userHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(userHome);
+                    finish();
                 } else {
                     verifyEmailAddress();
                 }
@@ -248,6 +271,11 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,
                                 "Verification email sent to " + user.getEmail(),
                                 Toast.LENGTH_SHORT).show();
+                        repeat_password_input_field_layout.setVisibility(View.GONE);
+                        password_input_field_layout.setVisibility(View.GONE);
+                        userSigningUp = false;
+                        userSigningIn = false;
+                        continueButton.setText("continue");
                     } else {
                         Log.e(TAG, "sendEmailVerification", task.getException());
                         Toast.makeText(MainActivity.this,
@@ -270,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(MainActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
-                        updateUI();
+                        //updateUI();
                     }
                 });
     }
@@ -298,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                                 userExits = true;
                                 userSigningUp = false;
                                 userSigningIn = true;
-                                Toast.makeText(getApplicationContext(), "email already exst", Toast.LENGTH_LONG).show();
+                               // Toast.makeText(getApplicationContext(), "email already exst", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -312,7 +340,9 @@ public class MainActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    Log.d(TAG, "onActivityResult: "+result.getResultCode());
                     if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: called ok");
                         // There are no request codes
                         Intent data = result.getData();
                         // Check condition
@@ -326,6 +356,7 @@ public class MainActivity extends AppCompatActivity {
                                 String s = "Google sign in successful";
                                 // Display Toast
                                 displayToast(s);
+                                Log.d(TAG, "onActivityResult: called success");
                                 // Initialize sign in account
 
                                 // Initialize sign in account
@@ -338,19 +369,27 @@ public class MainActivity extends AppCompatActivity {
                                     mAuth.signInWithCredential(authCredential).addOnCompleteListener(task -> {
                                         // Check condition
                                         if (task.isSuccessful()) {
+                                            progressBar.setVisibility(View.GONE);
                                             // When task is successful redirect to profile activity display Toast
                                             startActivity(new Intent(MainActivity.this, UserHome.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                             displayToast("Firebase authentication successful");
                                         } else {
+                                            progressBar.setVisibility(View.GONE);
                                             // When task is unsuccessful display Toast
                                             displayToast("Authentication Failed :" + Objects.requireNonNull(task.getException()).getMessage());
                                         }
                                     });
                                 }
+                            } else {
+                                Log.d(TAG, "onActivityResult: called failed");
                             }
-                        } catch (ApiException e) {
+                       }
+                        catch (ApiException e) {
                             e.printStackTrace();
-                        }
+                            progressBar.setVisibility(View.GONE);
+                       }
+                    } else {
+                        progressBar.setVisibility(View.GONE);
                     }
                 }
             });
@@ -393,8 +432,13 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        updateUI();
+                       // updateUI();
                         // Update UI
+                        progressBar.setVisibility(View.GONE);
+                        Intent userHome = new Intent(MainActivity.this, UserHome.class);
+                        userHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(userHome);
+                        finish();
                     } else {
                         // Sign in failed, display a message and update the UI
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
