@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -207,6 +208,18 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onActivityResult: called intent");
         });
 
+        projectUtils = new ProjectUtils(this);
+        projectUtils.checkAllPermission();
+        if(projectUtils.checkPostNotificationPermission(this)){
+            Intent intent1 = new Intent(this,ChatService.class);
+            intent1.putExtra("isVisible","false");
+            intent1.putExtra("PhoneNumber","");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent1);
+            } else {
+                startService(intent1);
+            }
+        }
 
     }
 
@@ -474,14 +487,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_PERMISSIONS_REQUEST_SEND_SMS) {
+        if (requestCode == 1) {
             if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(), "SMS sent.",
-                        Toast.LENGTH_LONG).show();
+                    && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent1 = new Intent(this,ChatService.class);
+                intent1.putExtra("isVisible","false");
+                intent1.putExtra("PhoneNumber","");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(intent1);
+                } else {
+                    startService(intent1);
+                }
             } else {
-                Toast.makeText(getApplicationContext(),
-                        "SMS faild, please try again.", Toast.LENGTH_LONG).show();
 
             }
         }

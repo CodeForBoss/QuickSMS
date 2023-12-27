@@ -1,6 +1,10 @@
 package com.example.quicksms;
 
-import android.accessibilityservice.AccessibilityService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,42 +17,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import java.util.Objects;
 
-public class ChatHead extends AccessibilityService {
-
-    private WindowManager windowManager;
-    private View chatHead;
-    //WindowManager windowManager2;
+public class ChatService extends Service {
     String phoneNumber;
     String isVisible;
 
     private LinearLayout rootView;
     View view;
     WindowManager windowManager2;
-
-
-    @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
-
-    }
-
-    @Override
-    public void onInterrupt() {
-
-    }
-
-
 
     @Override
     public void onCreate() {
@@ -79,7 +62,7 @@ public class ChatHead extends AccessibilityService {
         params.gravity = Gravity.TOP | Gravity.CENTER;
         params.x = 0;
         params.y = 0;
-         windowManager2 = (WindowManager) getSystemService(WINDOW_SERVICE);
+        windowManager2 = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager2.addView(view, params);
     }
 
@@ -90,7 +73,7 @@ public class ChatHead extends AccessibilityService {
         isVisible = intent.getStringExtra("isVisible");
         Log.d("anisur", "onStartCommand: called");
 
-
+          showForegroundServiceNotification("notificaiton");
 
         //chatHead = layoutInflater.inflate(R.layout.activity_chathead, null);
         rootView = view.findViewById(R.id.layoutRoot);
@@ -104,7 +87,11 @@ public class ChatHead extends AccessibilityService {
         pName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, "Name: "+pNameText, null, null);
+               try {
+                   smsManager.sendTextMessage(phoneNumber, null, "Name: "+pNameText, null, null);
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
             }
         });
 
@@ -122,7 +109,11 @@ public class ChatHead extends AccessibilityService {
         pAddressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, homeAddressMessage, null, null);
+              try {
+                  smsManager.sendTextMessage(phoneNumber, null, homeAddressMessage, null, null);
+              }catch (Exception e){
+                  e.printStackTrace();
+              }
             }
         });
 
@@ -133,7 +124,11 @@ public class ChatHead extends AccessibilityService {
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, "Email: "+pEmailText, null, null);
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Email: "+pEmailText, null, null);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -143,7 +138,11 @@ public class ChatHead extends AccessibilityService {
         phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, "Phone: "+pPhoneText, null, null);
+               try {
+                   smsManager.sendTextMessage(phoneNumber, null, "Phone: "+pPhoneText, null, null);
+               } catch (Exception e){
+                   e.printStackTrace();
+               }
             }
         });
 
@@ -168,7 +167,7 @@ public class ChatHead extends AccessibilityService {
         TextView closeButton = view.findViewById(R.id.close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-           public void onClick(View v) {
+            public void onClick(View v) {
                 //windowManager2.removeViewImmediate(chatHead);
             }
         });
@@ -179,7 +178,11 @@ public class ChatHead extends AccessibilityService {
         bName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, "Business Name: "+bNameText, null, null);
+              try {
+                  smsManager.sendTextMessage(phoneNumber, null, "Business Name: "+bNameText, null, null);
+              } catch (Exception e){
+                  e.printStackTrace();
+              }
             }
         });
 
@@ -189,14 +192,18 @@ public class ChatHead extends AccessibilityService {
         String bAddreline2 = pref.getString(AppConstant.bAddressLine,"");
         String bCity = pref.getString(AppConstant.bCity,"");
         String bState = pref.getString(AppConstant.bState,"");
-      //  String bCountry = pref.getString(AppConstant.bCountry,"");
+        //  String bCountry = pref.getString(AppConstant.bCountry,"");
         String bZip = pref.getString(AppConstant.bZipCode,"");
 
         String bHomeAddressMessage = "Address: "+bStateAddress+" "+bAddreline2+"\n"+"City: "+bCity+"\n"+"State: "+bState+"\n"+"Zip: "+bZip;
         bAddressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, bHomeAddressMessage, null, null);
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, bHomeAddressMessage, null, null);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -208,7 +215,11 @@ public class ChatHead extends AccessibilityService {
         bEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, "Email: "+bEmailText, null, null);
+               try {
+                   smsManager.sendTextMessage(phoneNumber, null, "Email: "+bEmailText, null, null);
+               } catch (Exception e){
+                   e.printStackTrace();
+               }
             }
         });
 
@@ -218,7 +229,11 @@ public class ChatHead extends AccessibilityService {
         bPhoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber, null, "Phone: "+bPhoneText, null, null);
+               try {
+                   smsManager.sendTextMessage(phoneNumber, null, "Phone: "+bPhoneText, null, null);
+               } catch (Exception e){
+                   e.printStackTrace();
+               }
             }
         });
 
@@ -226,7 +241,11 @@ public class ChatHead extends AccessibilityService {
         myNameTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smsManager.sendTextMessage(phoneNumber,null,"Name: "+pNameText,null,null);
+                try {
+                    smsManager.sendTextMessage(phoneNumber,null,"Name: "+pNameText,null,null);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         if (Objects.equals(isVisible, "false")){
@@ -237,13 +256,43 @@ public class ChatHead extends AccessibilityService {
 
         super.onStartCommand(intent, flags, startId);
         return START_STICKY;
-
     }
 
-
+    @Nullable
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //windowManager2.removeViewImmediate(chatHead);
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void showForegroundServiceNotification(String message){
+        String foregroundNotificationTitle = getResources().getString(R.string.app_name);
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        NotificationManager forgroundNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if(forgroundNotificationManager != null) {
+            NotificationChannel notificationChannel = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                notificationChannel = new NotificationChannel(foregroundNotificationTitle, foregroundNotificationTitle, NotificationManager.IMPORTANCE_LOW);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                forgroundNotificationManager.createNotificationChannel(notificationChannel);
+            }
+            Notification notification = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                notification = new NotificationCompat.Builder(this, forgroundNotificationManager.getNotificationChannel(foregroundNotificationTitle).getId())
+                        .setContentTitle(foregroundNotificationTitle)
+                        .setContentText(message)
+                        .setTicker(foregroundNotificationTitle + ": " + message)
+                        .setContentIntent(pendingIntent)
+                        .setDefaults(0)
+                        .setSound(null)
+                        .build();
+            }
+            assert notification != null;
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+
+            // start as foreground
+            startForeground(1, notification);
+        }
     }
 }

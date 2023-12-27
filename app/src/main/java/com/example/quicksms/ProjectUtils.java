@@ -2,14 +2,18 @@ package com.example.quicksms;
 
 import static com.example.quicksms.MainActivity.REQUEST_CODE;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class ProjectUtils {
 
@@ -53,9 +57,8 @@ public class ProjectUtils {
         String[] PERMISSIONS = {
                 android.Manifest.permission.SEND_SMS,
                 android.Manifest.permission.READ_PHONE_STATE,
-                android.Manifest.permission.READ_CALL_LOG,
-                android.Manifest.permission.WRITE_SETTINGS,
-                android.Manifest.permission.WRITE_SECURE_SETTINGS
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.READ_CALL_LOG
         };
 
         if (!hasPermissions(activity, PERMISSIONS)) {
@@ -65,7 +68,7 @@ public class ProjectUtils {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName()));
             activity.startActivityForResult(intent, REQUEST_CODE);
         }
-        if(!Settings.System.canWrite(activity)){
+       /* if(!Settings.System.canWrite(activity)){
             Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
             intent.setData(Uri.parse("package:" + activity.getApplicationContext().getPackageName()));
             activity.startActivity(intent);
@@ -75,11 +78,29 @@ public class ProjectUtils {
             Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
             intent.setData(Uri.parse("package:" + activity.getApplicationContext().getPackageName()));
             activity.startActivity(intent);
-        }
+        }*/
 
 
-        checkAccessibilityPermission();
+      //  checkAccessibilityPermission();
 
     }
+    void requestNotificationPermissions(Activity context) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.POST_NOTIFICATIONS)) {
+
+        } else {
+            ActivityCompat.requestPermissions(context,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    7);
+        }
+    }
+
+     boolean checkPostNotificationPermission(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return true;
+        } else {
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
 
 }
