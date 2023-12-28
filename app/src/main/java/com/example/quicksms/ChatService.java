@@ -26,8 +26,8 @@ import androidx.core.app.NotificationCompat;
 import java.util.Objects;
 
 public class ChatService extends Service {
-    String phoneNumber;
-    String isVisible;
+    String phoneNumber = "";
+    String isVisible = "";
 
     private LinearLayout rootView;
     View view;
@@ -68,13 +68,14 @@ public class ChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        showForegroundServiceNotification("notificaiton");
         SharedPreferences pref = getApplicationContext().getSharedPreferences(getPackageName(), 0);
-        phoneNumber = intent.getStringExtra("PhoneNumber");
-        isVisible = intent.getStringExtra("isVisible");
-        Log.d("anisur", "onStartCommand: called");
-
-          showForegroundServiceNotification("notificaiton");
-
+        if(intent.hasExtra("PhoneNumber")){
+            phoneNumber = intent.getStringExtra("PhoneNumber");
+        }
+        if(intent.hasExtra("isVisible")){
+            isVisible = intent.getStringExtra("isVisible");
+        }
         //chatHead = layoutInflater.inflate(R.layout.activity_chathead, null);
         rootView = view.findViewById(R.id.layoutRoot);
 
