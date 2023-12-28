@@ -33,6 +33,10 @@ public class ChatService extends Service {
     View view;
     WindowManager windowManager2;
 
+    SmsManager smsManager;
+    TextView pName,pAddressButton,emailButton,phoneButton,bName,bAddressButton,
+            bEmailButton,bPhoneButton,myNameTextButton;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,88 +68,9 @@ public class ChatService extends Service {
         params.y = 0;
         windowManager2 = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager2.addView(view, params);
-    }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        showForegroundServiceNotification("notificaiton");
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(getPackageName(), 0);
-        if(intent.hasExtra("PhoneNumber")){
-            phoneNumber = intent.getStringExtra("PhoneNumber");
-        }
-        if(intent.hasExtra("isVisible")){
-            isVisible = intent.getStringExtra("isVisible");
-        }
-        //chatHead = layoutInflater.inflate(R.layout.activity_chathead, null);
         rootView = view.findViewById(R.id.layoutRoot);
-
-        SmsManager smsManager = SmsManager.getDefault();
-
-
-        //personal name button click operation
-        TextView pName = view.findViewById(R.id.p_name);
-        String pNameText = pref.getString(AppConstant.pNameKey,"");
-        pName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               try {
-                   smsManager.sendTextMessage(phoneNumber, null, "Name: "+pNameText, null, null);
-               }catch (Exception e){
-                   e.printStackTrace();
-               }
-            }
-        });
-
-        //personal home address click operation
-
-        TextView pAddressButton = view.findViewById(R.id.p_address);
-        String stateAddress = pref.getString(AppConstant.pStreetAddress,"");
-        String addreline2 = pref.getString(AppConstant.pAddressLine,"");
-        String city = pref.getString(AppConstant.pCity,"");
-        String state = pref.getString(AppConstant.pState,"");
-        String country = pref.getString(AppConstant.pCountry,"");
-        String zip = pref.getString(AppConstant.pZipCode,"");
-
-        String homeAddressMessage = "Address: "+stateAddress+" "+addreline2+"\n"+"City: "+city+"\n"+"State: "+state+"\n"+"Country: "+country+"\n"+"Zip: "+zip;
-        pAddressButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              try {
-                  smsManager.sendTextMessage(phoneNumber, null, homeAddressMessage, null, null);
-              }catch (Exception e){
-                  e.printStackTrace();
-              }
-            }
-        });
-
-        //personal email button click operation
-
-        TextView emailButton = view.findViewById(R.id.p_email);
-        String pEmailText = pref.getString(AppConstant.pEmailKey,"");
-        emailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    smsManager.sendTextMessage(phoneNumber, null, "Email: "+pEmailText, null, null);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        //personal Phone button click listener
-        TextView phoneButton = view.findViewById(R.id.p_phone);
-        String pPhoneText = pref.getString(AppConstant.pPhoneKey,"");
-        phoneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               try {
-                   smsManager.sendTextMessage(phoneNumber, null, "Phone: "+pPhoneText, null, null);
-               } catch (Exception e){
-                   e.printStackTrace();
-               }
-            }
-        });
+        smsManager = SmsManager.getDefault();
 
         LinearLayout pLayout = view.findViewById(R.id.personal_layout_sms);
         LinearLayout bLayout = view.findViewById(R.id.business_layout_sms);
@@ -165,30 +90,101 @@ public class ChatService extends Service {
             }
         });
 
-        TextView closeButton = view.findViewById(R.id.close_button);
-        closeButton.setOnClickListener(new View.OnClickListener() {
+        pName = view.findViewById(R.id.p_name);
+        pAddressButton = view.findViewById(R.id.p_address);
+        emailButton = view.findViewById(R.id.p_email);
+        phoneButton = view.findViewById(R.id.p_phone);
+        bName = view.findViewById(R.id.b_name);
+        bAddressButton = view.findViewById(R.id.b_address);
+        bEmailButton = view.findViewById(R.id.b_email);
+        bPhoneButton = view.findViewById(R.id.b_phone);
+        myNameTextButton = view.findViewById(R.id.bp_name);
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(getPackageName(), 0);
+        showForegroundServiceNotification("notificaiton");
+        if(intent.hasExtra("PhoneNumber")){
+            phoneNumber = intent.getStringExtra("PhoneNumber");
+        }
+        if(intent.hasExtra("isVisible")){
+            isVisible = intent.getStringExtra("isVisible");
+        }
+        //personal name button click operation
+        String pNameText = pref.getString(AppConstant.pNameKey,"");
+        pName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //windowManager2.removeViewImmediate(chatHead);
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Name: "+pNameText, null, null);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //personal home address click operation
+        String stateAddress = pref.getString(AppConstant.pStreetAddress,"");
+        String addreline2 = pref.getString(AppConstant.pAddressLine,"");
+        String city = pref.getString(AppConstant.pCity,"");
+        String state = pref.getString(AppConstant.pState,"");
+        String country = pref.getString(AppConstant.pCountry,"");
+        String zip = pref.getString(AppConstant.pZipCode,"");
+
+        String homeAddressMessage = "Address: "+stateAddress+" "+addreline2+"\n"+"City: "+city+"\n"+"State: "+state+"\n"+"Country: "+country+"\n"+"Zip: "+zip;
+        pAddressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, homeAddressMessage, null, null);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //personal email button click operation
+        String pEmailText = pref.getString(AppConstant.pEmailKey,"");
+        emailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Email: "+pEmailText, null, null);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //personal Phone button click listener
+        String pPhoneText = pref.getString(AppConstant.pPhoneKey,"");
+        phoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Phone: "+pPhoneText, null, null);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
         //Business name button click operation
-        TextView bName = view.findViewById(R.id.b_name);
         String bNameText = pref.getString(AppConstant.bNameKey,"");
         bName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              try {
-                  smsManager.sendTextMessage(phoneNumber, null, "Business Name: "+bNameText, null, null);
-              } catch (Exception e){
-                  e.printStackTrace();
-              }
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Business Name: "+bNameText, null, null);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
         //Business address button click operation
-        TextView bAddressButton = view.findViewById(R.id.b_address);
         String bStateAddress = pref.getString(AppConstant.bStreetAddress,"");
         String bAddreline2 = pref.getString(AppConstant.bAddressLine,"");
         String bCity = pref.getString(AppConstant.bCity,"");
@@ -210,35 +206,32 @@ public class ChatService extends Service {
 
 
         //Business email button click operation
-
-        TextView bEmailButton = view.findViewById(R.id.b_email);
         String bEmailText = pref.getString(AppConstant.bEmailKey,"");
         bEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               try {
-                   smsManager.sendTextMessage(phoneNumber, null, "Email: "+bEmailText, null, null);
-               } catch (Exception e){
-                   e.printStackTrace();
-               }
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Email: "+bEmailText, null, null);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
         //Business Phone button click listener
-        TextView bPhoneButton = view.findViewById(R.id.b_phone);
         String bPhoneText = pref.getString(AppConstant.bPhoneKey,"");
         bPhoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               try {
-                   smsManager.sendTextMessage(phoneNumber, null, "Phone: "+bPhoneText, null, null);
-               } catch (Exception e){
-                   e.printStackTrace();
-               }
+                try {
+                    smsManager.sendTextMessage(phoneNumber, null, "Phone: "+bPhoneText, null, null);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
-        TextView myNameTextButton = view.findViewById(R.id.bp_name);
+        myNameTextButton = view.findViewById(R.id.bp_name);
         myNameTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,6 +242,8 @@ public class ChatService extends Service {
                 }
             }
         });
+
+
         if (Objects.equals(isVisible, "false")){
             rootView.setVisibility(View.GONE);
         } else {
