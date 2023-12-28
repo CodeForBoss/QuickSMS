@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SL_OPTION_PHONE = 1111;
     private static final int SL_OPTION_EMAIL = 3333;
     TextInputEditText emailField, passwordField, repeatPasswordField, phoneInputFiled, verificationCodeFiled;
-    TextView text_email_phone_option;
+    TextView text_email_phone_option,forgot_password_button;
     Button continueButton;
     SignInButton googleSigninBtn;
     TextInputLayout password_input_field_layout,
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         verification_input_layout = findViewById(R.id.verification_input_layout);
         verificationCodeFiled = findViewById(R.id.verification_input_field);
         progressBar = findViewById(R.id.progressbar);
+        forgot_password_button = findViewById(R.id.forgot_password);
         text_email_phone_option.setOnClickListener(v -> {
             if (selectedOption == SL_OPTION_PHONE) {
                 text_email_phone_option.setText(R.string.use_phone_instead);
@@ -201,6 +202,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        forgot_password_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = Objects.requireNonNull(emailField.getText()).toString();
+                if (!TextUtils.isEmpty(email)){
+                    progressBar.setVisibility(View.VISIBLE);
+                    resetPassword(email);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(),"Email is empty",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
         googleSigninBtn.setOnClickListener(v -> {
             progressBar.setVisibility(View.VISIBLE);
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -223,7 +239,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    private void resetPassword(String email) {
+          if(mAuth == null){
+              return;
+          }
+          mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+              @Override
+              public void onComplete(@NonNull Task<Void> task) {
+                  if(task.isSuccessful()){
+                      Toast.makeText(getApplicationContext(),"Password reset email has sent",Toast.LENGTH_SHORT).show();
+                      password_input_field_layout.setVisibility(View.GONE);
+                      forgot_password_button.setVisibility(View.GONE);
+                      progressBar.setVisibility(View.GONE);
+                      userSigningIn = false;
+                  } else {
+                      Toast.makeText(getApplicationContext(),"Password reset failed",Toast.LENGTH_SHORT).show();
+                      password_input_field_layout.setVisibility(View.GONE);
+                      forgot_password_button.setVisibility(View.GONE);
+                      progressBar.setVisibility(View.GONE);
+                      userSigningIn = false;
+                  }
+              }
+          }).addOnFailureListener(new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                  Toast.makeText(getApplicationContext(),"Password reset failed",Toast.LENGTH_SHORT).show();
+                  password_input_field_layout.setVisibility(View.GONE);
+                  forgot_password_button.setVisibility(View.GONE);
+                  progressBar.setVisibility(View.GONE);
+                  userSigningIn = false;
+              }
+          });
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -332,9 +379,11 @@ public class MainActivity extends AppCompatActivity {
                                 userSigningUp = true;
                                 password_input_field_layout.setVisibility(View.VISIBLE);
                                 repeat_password_input_field_layout.setVisibility(View.VISIBLE);
+                                forgot_password_button.setVisibility(View.GONE);
                                 continueButton.setText(R.string.sign_up);
                             } else {
                                 password_input_field_layout.setVisibility(View.VISIBLE);
+                                forgot_password_button.setVisibility(View.VISIBLE);
                                 continueButton.setText(R.string.sign_in);
                                 userExits = true;
                                 userSigningUp = false;
