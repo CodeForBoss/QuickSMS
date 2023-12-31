@@ -12,9 +12,9 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -57,17 +57,53 @@ public class ChatService extends Service {
                 LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        WindowManager.LayoutParams appOverlayLayoutParams = new WindowManager.LayoutParams();
-        appOverlayLayoutParams.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
-        appOverlayLayoutParams.format = PixelFormat.TRANSLUCENT;
-        appOverlayLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        appOverlayLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        appOverlayLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.TOP | Gravity.CENTER;
+        params.gravity = Gravity.CENTER;
         params.x = 0;
         params.y = 0;
         windowManager2 = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager2.addView(view, params);
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+
+            final WindowManager.LayoutParams floatWindowLayoutUpdateParam = params;
+            double x;
+            double y;
+            double px;
+            double py;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    // When the window will be touched,
+                    // the x and y position of that position
+                    // will be retrieved
+                    case MotionEvent.ACTION_DOWN:
+                        x = floatWindowLayoutUpdateParam.x;
+                        y = floatWindowLayoutUpdateParam.y;
+
+                        // returns the original raw X
+                        // coordinate of this event
+                        px = event.getRawX();
+
+                        // returns the original raw Y
+                        // coordinate of this event
+                        py = event.getRawY();
+                        break;
+                    // When the window will be dragged around,
+                    // it will update the x, y of the Window Layout Parameter
+                    case MotionEvent.ACTION_MOVE:
+                        floatWindowLayoutUpdateParam.x = (int) ((x + event.getRawX()) - px);
+                        floatWindowLayoutUpdateParam.y = (int) ((y + event.getRawY()) - py);
+
+                        // updated parameter is applied to the WindowManager
+                        windowManager2.updateViewLayout(view, floatWindowLayoutUpdateParam);
+                        break;
+                }
+
+
+                return false;
+            }
+        });
 
         rootView = view.findViewById(R.id.layoutRoot);
         smsManager = SmsManager.getDefault();
