@@ -632,10 +632,9 @@
 
     <Button
         android:id="@+id/btn_save"
-        style="?attr/materialButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:backgroundTint="@drawable/button_selector"
         android:text="@string/update" />
 
     <ImageButton

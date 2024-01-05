@@ -27,7 +27,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         String outgoingPhoneNumber="",incomingPhoneNumber="";
        // String state=intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
-            if (intent.hasExtra(TelephonyManager.EXTRA_STATE) && intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+            if (intent.hasExtra(TelephonyManager.EXTRA_STATE) && intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)
+            || intent.hasExtra(TelephonyManager.EXTRA_STATE) && intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                     incomingPhoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                     Log.i("incoming", ""+incomingPhoneNumber);
                     outgoingPhoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
